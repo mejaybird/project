@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: JAY
+    schema: raw
+    tables:
+      - name: db_active_employees
+        identifier: db_active_employees
+      - name: course_data
+        identifier: learning_n
