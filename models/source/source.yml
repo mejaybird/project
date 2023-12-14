@@ -2,9 +2,9 @@ version: 2
 
 sources:
   - name: JAY
-    schema: raw
+    schema: source_data
     tables:
-      - name: db_active_employees
-        identifier: db_active_employees
+      - name: active_employees
+        identifier: active_employees
       - name: course_data
         identifier: learning_n

@@ -1,0 +1,23 @@
+{{
+    config(
+        materialized= 'table'
+    )
+}}
+ 
+ 
+ 
+WITH L AS (
+  SELECT DISTINCT
+    JOB_TITLE,
+    JOB_FUNCTION,
+    JOB_FAMILY,
+    EEO_CATEGORY,
+    CAREER_BAND,
+    CAREER_LEVEL
+  FROM {{ref("combined_data")}}
+)
+
+SELECT
+  ROW_NUMBER() OVER (ORDER BY JOB_TITLE, JOB_FUNCTION, JOB_FAMILY, EEO_CATEGORY, CAREER_BAND, CAREER_LEVEL) AS JOB_KEY,
+  *
+FROM L

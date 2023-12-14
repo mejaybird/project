@@ -1,8 +1,10 @@
 WITH
-a AS ( SELECT * FROM {{ ref('active_employees_cleaned') }}
+A AS (
+  SELECT * FROM {{ ref('active_employees_cleaned') }}
 ),
-
-c AS ( SELECT *  FROM {{ ref('course_data_raw') }}
+C AS (
+  SELECT * FROM {{ ref('course_data_raw') }}
 )
 
-select * from c  join a on a.ftv_id = c.employeenumber
+SELECT * FROM C
+JOIN A ON A.FTV_ID = C.EMPLOYEE_NUMBER

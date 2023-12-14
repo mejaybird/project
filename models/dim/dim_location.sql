@@ -1,0 +1,23 @@
+{{
+ config(
+ materialized = 'table',
+ )
+}}
+
+
+WITH L AS (
+  SELECT DISTINCT
+    WORK_LOCATION,
+    WORK_CITY,
+    WORK_STATE,
+    WORK_COUNTRY,
+    WORK_REGION
+  FROM {{ref("combined_data")}}
+)
+
+SELECT
+  ROW_NUMBER() OVER (ORDER BY WORK_LOCATION, WORK_CITY, WORK_STATE, WORK_COUNTRY, WORK_REGION) AS LOCATION_KEY,
+  *
+FROM L
+
+

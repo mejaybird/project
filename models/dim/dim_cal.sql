@@ -1,4 +1,8 @@
--- models/w_day_d.sql
+{{
+ config(
+ materialized = 'table',
+ )
+}}
 
 WITH generated_data AS (
     SELECT
@@ -37,14 +41,11 @@ WITH generated_data AS (
         TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1, 'YYYY-MM') as per_name_month,
         TO_CHAR(WEEK(TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1)) || '-' ||
             TO_CHAR(EXTRACT(YEAR FROM (TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1))) as per_name_week
-    FROM TABLE(GENERATOR(ROWCOUNT => 55255))
+    FROM TABLE(GENERATOR(ROWCOUNT => 45274))
 )
 
--- Create the w_day_d table
 SELECT
-    EXTRACT(YEAR FROM calender_date) * 10000 +
-    EXTRACT(MONTH FROM calender_date) * 100 +
-    EXTRACT(DAY FROM calender_date) AS numeric_date,
+    TO_CHAR(calender_date, 'YYYYMMDD') AS cal_key,
     calender_date,
     day_name,
     month_name,
