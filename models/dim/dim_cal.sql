@@ -1,15 +1,14 @@
 {{
- config(
- materialized = 'table',
- )
+    config(
+        materialized = 'table'
+    )
 }}
-
-WITH generated_data AS (
+WITH RECURSIVE generated_data AS (
     SELECT
         ROW_NUMBER() OVER (ORDER BY TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1) as row_wid,
         TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1 as calender_date,
-        DAYNAME(calender_date) as day_name,
-        TO_CHAR(calender_date, 'MMMM') as month_name,
+        DAYNAME(TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1) as day_name,
+        TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1, 'MMMM') as month_name,
         TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1, 'Mon') as month_name_abbr,
         CEIL(EXTRACT(MONTH FROM (TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1))/6) as cal_half,
         CEIL(EXTRACT(MONTH FROM (TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1))/3) as cal_qtr,
@@ -40,12 +39,24 @@ WITH generated_data AS (
             TO_CHAR(CEIL(EXTRACT(MONTH FROM (TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1))/4)) as per_name_ter,
         TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1, 'YYYY-MM') as per_name_month,
         TO_CHAR(WEEK(TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1)) || '-' ||
-            TO_CHAR(EXTRACT(YEAR FROM (TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1))) as per_name_week
-    FROM TABLE(GENERATOR(ROWCOUNT => 45274))
+            TO_CHAR(EXTRACT(YEAR FROM (TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1))) as per_name_week,
+            CONCAT(TO_CHAR(calender_date, 'YYYY'), '-', TO_CHAR(calender_date, 'MM')) as month_year
+    FROM (
+        SELECT
+            SEQ4() as SEQ4
+        FROM TABLE(GENERATOR(ROWCOUNT => 55255))
+    )
+    WHERE TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1 <= CURRENT_DATE()
 )
-
+ 
+-- Create the w_day_d table
+ 
+ 
+-- Create the w_day_d table
 SELECT
-    TO_CHAR(calender_date, 'YYYYMMDD')::VARCHAR(8) AS cal_key,
+    EXTRACT(YEAR FROM calender_date) * 10000 +
+    EXTRACT(MONTH FROM calender_date) * 100 +
+    EXTRACT(DAY FROM calender_date) AS cal_key,
     calender_date,
     day_name,
     month_name,
