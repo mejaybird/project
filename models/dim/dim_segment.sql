@@ -5,16 +5,11 @@
 }}
 
 
-WITH L AS (
-  SELECT DISTINCT
+  SELECT DISTINCT   md5(SEGMENT || OPCO || SUB_OPCO || DEPARTMENT_NAME) AS SEGMENT_KEY,
+
     SEGMENT,
     OPCO,
     SUB_OPCO,
     DEPARTMENT_NAME
-  FROM {{ref("combined_data")}}
-)
+  FROM {{ref("active_employees_cleaned")}}
 
-SELECT
-  ROW_NUMBER() OVER (ORDER BY SEGMENT, OPCO, SUB_OPCO, DEPARTMENT_NAME) AS SEGMENT_KEY,
-  *
-FROM L

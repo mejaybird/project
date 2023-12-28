@@ -48,11 +48,7 @@ WITH RECURSIVE generated_data AS (
     )
     WHERE TO_DATE('1900-01-01', 'YYYY-MM-DD') + SEQ4()-1 <= CURRENT_DATE()
 )
- 
--- Create the w_day_d table
- 
- 
--- Create the w_day_d table
+
 SELECT
     EXTRACT(YEAR FROM calender_date) * 10000 +
     EXTRACT(MONTH FROM calender_date) * 100 +

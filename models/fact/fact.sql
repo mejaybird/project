@@ -28,7 +28,7 @@ WITH FACT AS (
                       B.ENTITY_KEY,
                       ASS.ASSIGNMENT_KEY,
                       J.JOB_KEY,
-                      F.ATTAINED_CERTIFICATE,
+                      EN.ENROLL_KEY,
                       F.EMPLOYEE_NUMBER,
                       NVL(CERTIFICATE_DATE_KEY, -999) AS CERTIFICATE_DATE_KEY,
                       NVL(DATE_COMPLETED_KEY, -999) AS COMPLETED_DATE_KEY,
@@ -49,9 +49,7 @@ WITH FACT AS (
                       F.STATUS,
                       F.TIMESPENT_MIN,
                       F.FTE,
-                      F.ENROLLMENT_METHOD,
-                      F.IS_ENROLLED,
-                      F.MANAGER_FTV_ID AS MANAGER_EMPLOYEE_NUMBER
+                      NVL(F.MANAGER_FTV_ID, 0) AS MANAGER_EMPLOYEE_NUMBER
                                              FROM FACT F
 
                                               LEFT OUTER JOIN {{ref('dim_rating')}} R
@@ -100,3 +98,10 @@ WITH FACT AS (
                                                 AND F.COURSE_VERSION = C.COURSE_VERSION
                                                 AND F.VENDOR = C.VENDOR
                                                 AND F.LANGUAGE = C.LANGUAGE
+
+                                              LEFT OUTER JOIN {{ref("dim_enrollment")}} EN
+                                                ON F.IS_ENROLLED = EN.IS_ENROLLED
+                                                AND F.ENROLLMENT_METHOD = EN.ENROLLMENT_METHOD
+                                                AND F.ATTAINED_CERTIFICATE = EN.ATTAINED_CERTIFICATE
+                                                AND F.IS_DELETED = EN.IS_DELETED
+                                                AND F.IS_ACTIVE = EN.IS_ACTIVE
