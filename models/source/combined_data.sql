@@ -1,3 +1,5 @@
+
+
 WITH
 A AS (
   SELECT * FROM {{ ref('active_employees_cleaned') }}

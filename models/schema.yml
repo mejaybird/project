@@ -1,0 +1,24 @@
+version: 2
+models:
+  - name: fact
+    description: Cleansed table which contains Airbnb listings.
+    columns:
+      - name: ENROLLMENT_ID
+        description: Primary key for the listing
+        tests:
+          - unique
+          - not_null
+  - name: dim_segment
+    description: segment
+    columns:
+      - name: SEGMENT_KEY
+        tests:
+          - unique
+          - not_null
+  - name: dim_rating
+    description: rating
+    columns:
+      - name: rating_key
+        tests:
+          - unique
+          - not_null
