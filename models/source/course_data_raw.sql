@@ -1,3 +1,7 @@
+{{
+  config(materialized='table')
+}}
+
 with course_data_raw as (
       select * from {{ source('JAY','course_data') }}
 )
