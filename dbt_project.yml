@@ -34,4 +34,4 @@ models:
   project:
     # Config indicated by + and applies to all files under models/example/
     source:
-     +materialized: view
+     +materialized: table
