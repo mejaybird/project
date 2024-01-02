@@ -1,7 +1,7 @@
 {{
- config(
- materialized = 'table',
- )
+  config(materialized='incremental',
+    unique_key='ASSIGNMENT_KEY',
+    incremental_strategy='delete+insert')
 }}
 
 

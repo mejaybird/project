@@ -1,11 +1,14 @@
 {{
-  config(materialized='table')
+  config
+  (materialized='incremental',
+    unique_key='enrollment_id',
+    merge_exclude_columns = ['inserted_at'])
 }}
 
 with course_data_raw as (
-      select * from {{ source('JAY','course_data') }}
+      select * from {{ source('JAY','incremental_load') }}
 )
-select  ATTAINED_CERTIFICATE,
+select  NVL(ATTAINED_CERTIFICATE, 'NA') AS ATTAINED_CERTIFICATE,
 CERTIFICATE_DATE,
 COURSE,
 COURSE_NAME,
@@ -17,13 +20,18 @@ DATE_ENROLLED,
 DATE_EXPIRES,
 DATE_HIRED,
 DATE_STARTED,
-DAYS_UNTIL_DUE,
+-- DAYS_UNTIL_DUE,
 EMPLOYEE_NUMBER,
 ENROLLMENT_ID,
-ENROLLMENT_METHOD,
-IS_ENROLLED,
+NVL(ENROLLMENT_METHOD, 'NA') AS ENROLLMENT_METHOD,
+NVL(IS_ENROLLED, 'NA') AS IS_ENROLLED,
 NVL(IS_ACTIVE, 'NA') AS IS_ACTIVE,
-NVL(IS_DELETED, 'NA') AS IS_DELETED,
+CASE
+    WHEN IS_DELETED = 'TRUE' THEN 'True'
+    WHEN IS_DELETED = 'FALSE' THEN 'False'
+    WHEN IS_DELETED IS NULL THEN 'NA'
+ELSE IS_DELETED
+END AS IS_DELETED,
 LANGUAGE,
 LAST_LOGGEDIN,
 PROGRESS,
@@ -39,5 +47,14 @@ CASE
     ELSE STATUS
   END AS STATUS,
 TIMESPENT_MIN,
-NVL(VENDOR, 'NA') AS VENDOR from course_data_raw
-  
+NVL(VENDOR, 'NA') AS VENDOR,
+CURRENT_TIMESTAMP() as INSERTED_AT,
+CURRENT_TIMESTAMP() as UPDATED_AT
+          from course_data_raw
+
+--           {% if is_incremental() %}
+
+-- where
+--   updated_at > (select max(updated_at) from {{ this }})
+
+-- {% endif %}

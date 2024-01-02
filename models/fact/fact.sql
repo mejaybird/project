@@ -1,7 +1,7 @@
 {{
- config(
- materialized = 'table',
- )
+  config(materialized='incremental',
+    unique_key='enrollment_id',
+    merge_exclude_columns = ['inserted_at'])
 }}
 
 
@@ -39,7 +39,7 @@ WITH FACT AS (
                       NVL(ORIGINAL_HIRE_DATE_KEY, -999) AS ORIGINAL_HIRE_DATE_KEY,
                       NVL(LATEST_HIRE_DATE_KEY, -999) AS LATEST_HIRE_DATE_KEY,
                       NVL(ADJUSTED_SERVICE_DATE_KEY, -999) AS ADJUSTED_SERVICE_DATE_KEY,
-                      F.DAYS_UNTIL_DUE,
+                      -- F.DAYS_UNTIL_DUE,
                       F.SALARY,
                       F.CURRENCY_CODE,
                       F.LENGTH_OF_SERVICE,
@@ -49,7 +49,9 @@ WITH FACT AS (
                       F.STATUS,
                       F.TIMESPENT_MIN,
                       F.FTE,
-                      NVL(F.MANAGER_FTV_ID, 0) AS MANAGER_EMPLOYEE_NUMBER
+                      NVL(F.MANAGER_FTV_ID, 0) AS MANAGER_EMPLOYEE_NUMBER,
+                      F.INSERTED_AT,
+                      F.UPDATED_AT
                                              FROM FACT F
 
                                               LEFT OUTER JOIN {{ref('dim_rating')}} R

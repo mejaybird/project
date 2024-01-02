@@ -8,5 +8,5 @@ sources:
         identifier: active_employees
       - name: course_data
         identifier: learning_n
-      - name: incremental
-        identifier: incremental
+      - name: incremental_load
+        identifier: incremental_load

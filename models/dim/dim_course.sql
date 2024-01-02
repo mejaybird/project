@@ -1,7 +1,7 @@
 {{
- config(
- materialized = 'table',
- )
+  config(materialized='incremental',
+    unique_key='course_key',
+    incremental_strategy='delete+insert')
 }}
 
     SELECT distinct md5(COURSE || COURSE_NAME || COURSE_TYPE || COURSE_VERSION || LANGUAGE || VENDOR) as course_key,

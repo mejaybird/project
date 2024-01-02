@@ -22,3 +22,52 @@ models:
         tests:
           - unique
           - not_null
+  - name: dim_assignment
+    description: assignment
+    columns:
+      - name: assignment_key
+        tests:
+          - unique
+          - not_null
+  - name: dim_course
+    description: courses
+    columns:
+      - name: course_key
+        tests:
+          - unique
+          - not_null
+  - name: dim_enrollment
+    description: junk dimension
+    columns: 
+      - name: enroll_key
+        tests:
+          - unique
+          - not_null
+  - name: dim_entity
+    description: bussiness and legal entities
+    columns:
+      - name: entity_key
+        tests:
+          - unique
+          - not_null
+  - name: dim_job
+    description: job details
+    columns:
+      - name: job_key
+        tests:
+          - unique
+          - not_null
+  - name: dim_location
+    description: work location
+    columns:
+      - name: location_key
+        tests:
+          - unique
+          - not_null
+  - name: dim_employee
+    description: employee details
+    columns:
+      - name: employee_number
+        tests:
+          - unique
+          - not_null
