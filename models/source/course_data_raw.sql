@@ -1,6 +1,7 @@
 {{
   config
   (materialized='incremental',
+   full_refresh=False,
     unique_key='enrollment_id',
     merge_exclude_columns = ['inserted_at'])
 }}
@@ -51,10 +52,3 @@ NVL(VENDOR, 'NA') AS VENDOR,
 CURRENT_TIMESTAMP() as INSERTED_AT,
 CURRENT_TIMESTAMP() as UPDATED_AT
           from course_data_raw
-
---           {% if is_incremental() %}
-
--- where
---   updated_at > (select max(updated_at) from {{ this }})
-
--- {% endif %}

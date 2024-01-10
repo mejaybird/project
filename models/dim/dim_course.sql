@@ -1,6 +1,6 @@
 {{
   config(materialized='incremental',
-    unique_key='course_key',
+    unique_key=['COURSE', 'COURSE_NAME', 'COURSE_TYPE', 'COURSE_VERSION', 'LANGUAGE', 'VENDOR'],
     incremental_strategy='delete+insert')
 }}
 
